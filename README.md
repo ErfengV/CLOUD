@@ -44,7 +44,7 @@ ps:arrow_right:如需下载运行，需要自定义错误码(成功码为6000，
 
 （首页：）
 
-![2](\pic\2.png)
+![2](https://github.com/ErfengV/CLOUD/blob/main/pic/2.png)
 
 
 
