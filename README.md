@@ -20,7 +20,7 @@ ps:arrow_right:如需下载运行，需要自定义错误码(成功码为6000，
 
 [或者在这个项目中](https://github.com/ErfengV/comehome)把这个依赖下载下来也行
 
-![3](\pic\3.png)
+![3](https://github.com/ErfengV/CLOUD/blob/main/pic/3.png)
 
 相关数据库文件在sql目录里，在yml配置中改成自己本地的就可以了
 
@@ -34,13 +34,13 @@ ps:arrow_right:如需下载运行，需要自定义错误码(成功码为6000，
 
 （登录页面：）
 
-<img src="\pic\1.png" alt="1" style="zoom:50%;" />
+<img src="https://github.com/ErfengV/CLOUD/blob/main/pic/1.png" alt="1" style="zoom:50%;" />
 
 （注册页面：）
 
 
 
-<img src="\pic\1623312934324.png" alt="1623312934324" style="zoom:50%;" />
+<img src="https://github.com/ErfengV/CLOUD/blob/main/pic/1623312934324.png" alt="1623312934324" style="zoom:50%;" />
 
 （首页：）
 
@@ -50,4 +50,4 @@ ps:arrow_right:如需下载运行，需要自定义错误码(成功码为6000，
 
 （hdfs详细信息的页面(有点小简陋)：）
 
-<img src="\pic\1623313023510.png" alt="1623313023510" style="zoom:50%;" />
+<img src="https://github.com/ErfengV/CLOUD/blob/main/pic/1623313023510.png" alt="1623313023510" style="zoom:50%;" />
