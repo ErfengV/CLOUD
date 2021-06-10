@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+						<!-- 新 Bootstrap 核心 CSS 文件 -->
+		<link href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+ 
+		<!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+		<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+		 
+		<!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+		<script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+		<script src="js/vue.js"></script>
+		<script src="js/axios.js"></script>
+	</head>
+	<body>
+		<div style="margin-top: 200px;"></div>
+		<div class="container" id="main">
+	<div class="row clearfix">
+		<div class="col-md-4 column">
+		</div>
+		<div class="col-md-4 column">
+			<form role="form">
+				<div class="form-group">
+					 <label for="exampleInputEmail1">Email address</label><input type="email" v-model="username" class="form-control" id="exampleInputEmail1" />
+				</div>
+				<div class="form-group">
+					 <label for="exampleInputPassword1">Password</label><input type="password" v-model="password1" class="form-control" id="exampleInputPassword" />
+				</div>
+				<div class="form-group">
+					 <label for="exampleInputPassword1">Password Again</label><input type="password" v-model="password2" class="form-control" id="exampleInputPassword1" />
+				</div>
+				<!--<div class="form-group">
+					 <label for="exampleInputFile">File input</label><input type="file" id="exampleInputFile" />
+					<p class="help-block">
+						Example block-level help text here.
+					</p>
+				</div>-->
+				<div class="checkbox">
+					 <label><input type="checkbox" />Check me out</label>
+				</div> <button type="button" @click="register()" class="btn btn-default">Sign up</button>
+				<a class="btn btn-default" href="index.html" role="button">Sign in here</a>
+			</form>
+			
+		</div>
+		<div class="col-md-4 column">
+			
+		</div>
+	</div>
+</div>
+		<script type="text/javascript">
+			let vue = new Vue({
+				el: "#main",
+				data: {
+					username: "",
+					password1: "",
+					password2: "",
+				},
+				methods: {
+					register() {
+						//  var time = new Date().getTime();
+						let url = "/user/register";
+						let params=new URLSearchParams();
+						params.append("username",this.username);
+						params.append("password1",this.password1);
+						params.append("password2",this.password2);
+						console.log(this.username+"-"+this.password1);
+						axios.post(url, params).then((res) => {
+							if(res.data.code===6000){
+								alert("注册成功");
+								window.location.href="index.html";
+								// window.event.returnValue = false;
+							}else if(res.data.code=7000){
+								alert(res.data.data)
+							}else {
+								alert(res.data.message);
+							}
+						});
+					}
+				}
+			});
+
+
+		</script>
+	</body>
+</html>

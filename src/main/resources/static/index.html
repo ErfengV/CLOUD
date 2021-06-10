@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh-CN" >
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <!-- 新 Bootstrap 核心 CSS 文件 -->
+    <link href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+    <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+
+    <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="js/vue.js"></script>
+    <script src="js/axios.js"></script>
+</head>
+<body>
+<div style="margin-top: 200px;"></div>
+
+<div class="row clearfix" id="main">
+    <div class="col-md-4 column">
+    </div>
+    <div class="col-md-4 column">
+        <form class="form-horizontal"  role="form">
+            <div class="form-group">
+                <label for="inputEmail3" class="col-sm-2 control-label">Email</label>
+                <div class="col-sm-10">
+                    <input type="email"  v-model="username"  class="form-control" id="inputEmail3" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="inputPassword3" class="col-sm-2 control-label">Password</label>
+                <div class="col-sm-10">
+                    <input type="password"  v-model="password"  class="form-control" id="inputPassword3" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="inputPassword3" class="col-sm-2 control-label">验证码</label>
+                <div class="col-sm-5">
+                <input type="text"  class="form-control" placeholder="验证码" v-model="imageCode"
+                           >
+                </div>
+                <div class="col-sm-5">
+                <img :src="getImageCode" style="margin-bottom: -8px;width: 70px;height: 26px"
+                     @click="changeImageCode">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <div class="checkbox">
+                        <label><input type="checkbox" />Remember me</label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <button type="button" @click="login()" class="btn btn-default">Sign in</button>
+                    <a class="btn btn-default" href="register.html" role="button">Sign up here</a>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="col-md-4 column">
+    </div>
+</div>
+</div>
+<script type="text/javascript">
+
+    let vue = new Vue({
+        el: "#main",
+        data: {
+            getImageCode: 'verifyCodeServlet?' + Math.random(),
+            imageCode: '',
+            username: "",
+            password: "",
+        },
+        methods: {
+            changeImageCode: function () {
+                this.getImageCode = 'verifyCodeServlet?' + Math.random();
+            },
+            login() {
+                //  var time = new Date().getTime();
+                let url = "/user/login";
+                let params=new URLSearchParams();
+                params.append("username",this.username);
+                params.append("password",this.password);
+                params.append('validateCode', this.imageCode);
+                console.log(this.username+"-"+this.password)
+                axios.post(url, params).then((res) => {
+                    if(res.data.code===6000){
+                        alert("登录成功");
+                        window.location.href="success.html";
+                        // window.event.returnValue = false;
+                    }else if(res.data.code===7401){
+                        alert(res.data.data)
+                    }else {
+                        alert(res.data.message)
+                    }
+                });
+            }
+        }
+    });
+
+
+</script>
+</body>
+</html>

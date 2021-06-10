@@ -1,0 +1,44 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/disccloud?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Hongkong
+    username: root
+    password: 111
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    database: mysql
+    properties:
+      hibernate:
+        fromat-sql: true
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
+  redis:
+    host: 123.60.55.24
+    port: 6379
+    database: 1
+    password: 111
+    timeout: 5000ms
+    jedis:
+      pool:
+        max-active: 8
+        max-wait: -1ms
+        min-idle: 0
+        max-idle: 8
+server:
+  port: 66
+  servlet:
+    session:
+      timeout: 6000
+
+
+
+swagger:
+  enabled: true
+
+file:
+  UploadPath: D:/test/
+

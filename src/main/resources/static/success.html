@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8"/>
+    <title></title>
+    <!-- 新 Bootstrap 核心 CSS 文件 -->
+    <link href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+    <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+
+    <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="js/vue.js"></script>
+    <script src="js/axios.js"></script>
+</head>
+
+<body>
+<div style="margin-top: 20px;"></div>
+<div class="container" id="main">
+    <div class="row clearfix">
+        <div class="col-md-2 column" >
+            <h2>
+                HdfsInfo
+            </h2>
+            <p  style="overflow: scroll;height: 500px;">
+                {{hdfsInfo}}
+            </p>
+            <p>
+                <a class="btn" href="info.html">View details »</a>
+            </p>
+        </div>
+        <div class="col-md-10 column">
+            <div class="page-header">
+                <h1>
+                    <small>Welcome to use CloudDisc</small>
+                </h1>
+            </div>
+            <input type="file" name="myfile" ref="myfile"/>
+            <nav class="navbar navbar-default navbar-inverse" role="navigation">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse"
+                            data-target="#bs-example-navbar-collapse-1">
+                        <span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span
+                            class="icon-bar"></span><span class="icon-bar"></span></button>
+                    <a class="navbar-brand" href="#">CLOUD</a>
+                </div>
+
+                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                    <ul class="nav navbar-nav">
+                        <li>
+                            <a @click="uploadData()"> <img style="width: 20px" src="/img/上传.svg" alt="">上传</a>
+                        </li>
+                        <li>
+                            <a id="modal-233357" href="#modal-container-233357" role="button" class="btn"
+                               data-toggle="modal"><img style="width: 18px"
+                                                                                             src="/img/新建.svg" alt="">
+                                新建<strong class="caret"></strong></a>
+
+                        </li>
+                    </ul>
+                    <form class="navbar-form navbar-left" role="search">
+                        <div class="form-group">
+                            <input type="text" class="form-control" v-model="searchData"/>
+                        </div>
+                        <button type="submit" class="btn btn-default">Go!</button>
+                    </form>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li>
+                            <a href="#">Link</a>
+                        </li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">erfeng<strong
+                                    class="caret"></strong></a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a href="#" @click="logout()">退出登录</a>
+                                </li>
+                                <li>
+                                    <a href="#">设置</a>
+                                </li>
+
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+
+            </nav>
+
+            <ul  class="breadcrumb" >
+                <li  v-for="item in paths">
+                    <a>{{item}}</a>
+                </li>
+
+            </ul>
+
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>
+                        文件名
+                    </th>
+
+                    <th>
+                        权限
+                    </th>
+                    <th>
+                        owner
+                    </th>
+                    <th>
+                        大小
+                    </th>
+                    <th>
+                        修改日期
+                    </th>
+                    <th>
+                        操作
+                    </th>
+                </tr>
+                </thead>
+                <tbody v-for="f in Newitems">
+                <tr :class="f.color">
+                    <td>
+                        <a href="#" v-if="isnull" >{{f.name}}</a>
+                        <a href="#" v-else  @click="getfiles(path+'/'+f.name)">{{f.name}}</a>
+                    </td>
+                    <td>
+                        {{f.permission}}
+                    </td>
+                    <td>
+                        {{f.owner}}
+                    </td>
+                    <td>
+                        {{f.fileSize}}
+                    </td>
+                    <td>
+                        {{f.modification_time}}
+                    </td>
+
+                    <td>
+                        <button @click="download(f,null)"  type="button" class="btn btn-info btn-xs">下载</button>
+                        <a>|</a>
+                        <button type="button" @click="delDir(path+'/'+f.name,path)" class="btn btn-danger btn-xs">删除</button>
+                        <a>|</a>
+                        <button id="modal-233358" href="#modal-container-233358"
+                                @click="fuzhi(f.name)" data-toggle="modal" type="button" class="btn btn-warning btn-xs">修改</button>
+
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <a href="javascript:void(0);"  @click="getfiles(backroot)">>>>返回根目录</a>
+            <a href="javascript:void(0);"  @click="getfiles(back)">>>>返回上一级</a>
+            <!--            <a id="modal-233357" href="#modal-container-233357" role="button" class="btn" data-toggle="modal">触发遮罩窗体</a>-->
+
+            <div class="modal fade" id="modal-container-233357" role="dialog" aria-labelledby="myModalLabel"
+                 aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                            <h4 class="modal-title" id="myModalLabel1">
+                                请输入需要新建的文件名
+                            </h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="input-group">
+                    <span class="input-group-addon">
+                        <input type="radio"></span>
+                                <input type="text" v-model="dirname" class="form-control">
+                            </div><!-- /input-group -->
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" >关闭</button>
+                            <button @click="newdir()" type="button" data-dismiss="modal" class="btn btn-primary">
+                                提交
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            </div>
+            <!--修改文件操作-->
+            <div class="modal fade" id="modal-container-233358" role="dialog" aria-labelledby="myModalLabel"
+                 aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                            <h4 class="modal-title" id="myModalLabel2">
+                                请输入需要修改的文件名
+                            </h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="input-group">
+                    <span class="input-group-addon">
+                        <input type="radio"></span>
+                                <input type="text" v-model="newname" class="form-control">
+                            </div><!-- /input-group -->
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" >关闭</button>
+                            <button @click="changeFileName()" type="button" data-dismiss="modal" class="btn btn-primary">
+                                提交
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <!--修改文件操作-->
+        </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+
+    let vue = new Vue({
+        el: "#main",
+        data: {
+            hdfsInfo:'',
+            files: [],
+            path: "/",
+            paths:[],
+            dirname: "",
+            oldname:"",
+            newname:"",
+            searchData:"",
+            names:"",
+            isnull:false
+        },
+        mounted() {
+            this.getfiles(this.path);
+            this.getHdfsInfo();
+        },
+        computed:{
+            Newitems: function(){
+                var _this = this;
+                var Newitems = [];
+                if (_this.searchData) {
+                    return _this.files.filter(function(data) {
+                        return Object.keys(data).some(function(key) {
+                            return String(data[key]).indexOf(_this.searchData) > -1
+                        })
+                    })
+                }
+                console.log(_this.files);
+                return  _this.files;
+            },
+            back: function () {
+                if(this.paths!==null){
+                    var path="";
+                    for(var i=0;i<this.paths.length-1;i++){
+                        path+="/"+this.paths[i];
+                    }
+                    return path;
+                }
+                else
+                    return "/"
+            },
+            backroot:function () {
+                return"/"
+            }
+        },
+        methods: {
+            logout:function(){
+                let  params=new URLSearchParams();
+                axios.post("/user/logout",params).then(res=>{
+                    if(res.data.code===6000){
+                        alert("退出成功");
+                        window.location.href="index.html"
+                    }
+                })
+            },
+            getHdfsInfo:function(){
+              let  params=new URLSearchParams();
+              axios.post("/getHdfsInfo",params).then(res=>{
+                  if(res.data.code===6000){
+                      this.hdfsInfo=res.data.data;
+                  }
+              })
+            },
+            download(item,index){
+                let elemIF=document.createElement('iframe');
+                console.log("点击下载"+item.isDirectory+"===="+item)
+
+                if(!item.isDirectory){
+                    elemIF.src='file/downLoadFile.action?fileName='+item.name+"&path="+item.path;
+                }else if(item.isDirectory){
+                    elemIF.src='file/downLoadDirectory.action?fileName='+item.name+"&path="+item.path;
+                }
+                elemIF.style.display='none';
+                document.body.appendChild(elemIF);
+            },
+            //上传文件
+            uploadData(){
+              let myFile=this.$refs.myfile;
+              let files=myFile.files;
+              let file=files[0];
+              if(file===null){
+                  alert("请选择文件夹！！");
+                  return;
+              }
+              var formData =new FormData();
+              formData.append("file",file);
+              formData.append("currentPath",this.path);
+              this.uploadFileRequest("file/uploadData.action",formData).then(response=>{
+                  if(response.data.code===6000){
+                      this.getfiles(this.path);
+                  }
+              });
+            },
+            fuzhi(oldname){
+              this.oldname=oldname;
+            },
+            changeFileName(){
+                let url = "/changeFileName";
+                let params = new URLSearchParams();
+                params.append("path", this.path);
+                if(this.oldname===''){
+                    alert("请选择要修改的文件");
+                    return;
+                }
+                console.log(this.oldname);
+                params.append("oldName", this.oldname);
+                params.append("newName", this.newname);
+                axios.post(url, params).then((res) => {
+                    if (res.data.code === 6000) {
+                       this.getfiles(this.path)
+                    }else if(res.data.code===7101){
+
+                    }else {
+                        alert(res.data.message);
+                    }
+                });
+            },
+            getfiles(filename) {
+                //  var time = new Date().getTime();
+                let url = "/getFile";
+                console.log(filename);
+                let params = new URLSearchParams();
+                var filenames=new Array();
+                params.append("path", filename);
+                axios.post(url, params).then((res) => {
+                    if (res.data.code === 6000) {
+                        this.files = res.data.data;
+                        filenames.push(this.files.name);
+                        this.path = this.files[0].path;
+                        this.paths=this.files[0].paths;
+                        this.isnull=false;
+                    }else if(res.data.code===7101){
+                        this.files = res.data.data;
+                        this.path = this.files[0].path;
+                        this.paths=this.files[0].paths;
+                        this.isnull=true;
+                    }else {
+                        alert(res.data.message);
+                        window.location.href="index.html"
+                    }
+                });
+            },
+            newdir() {
+                let url = "/newDir";
+                let params = new URLSearchParams();
+                params.append("dirPath", this.path);
+                params.append("dirName", this.dirname);
+                axios.post(url, params).then((res) => {
+                    if (res.data.code === 6000) {
+                        this.getfiles(this.path);
+                    } else if (res.data.code === 7000) {
+                        alert(res.data.message);
+                    } else {
+                        alert(res.data.data);
+                    }
+                });
+            },
+            delDir(filename,file){
+                let url="/delFile";
+                let params = new URLSearchParams();
+                params.append("path", filename);
+                axios.post(url, params).then((res) => {
+                    if (res.data.code === 6000) {
+                        this.getfiles(file);
+                    } else if (res.data.code === 7000) {
+                        alert(res.data.message);
+                    } else {
+                        alert(res.data.data);
+                    }
+                });
+            },
+
+            uploadFileRequest(url, params) {
+                return axios({
+                    method: 'post',
+                    url: url,
+                    data: params,
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                });
+            }
+        }
+    });
+
+
+</script>
+</body>
+</html>
